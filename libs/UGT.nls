@@ -1,0 +1,11 @@
+to-report random_inherit_from [_father]
+  ;; 在hatch函数内部使用
+  ;; 随机选择父母中的一个
+  
+  let getfrom  _father ;; father
+  if((random 2 ) = 1)[
+    set getfrom [partner] of _father ;; mother
+  ]
+  report getfrom
+  
+end

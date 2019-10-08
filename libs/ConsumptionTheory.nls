@@ -1,0 +1,78 @@
+;;;;;;;;;;;;;;;;;;;;;;;;
+;;
+;; 消费者理论部分，使用CRRA函数
+;;
+;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+;; 瞬时效用函数
+to-report crraFun_backup [_c _theta]
+  ;; CRRA函数在c<1时会产生负效用
+  ;; 仿真必须避免这个问题，因此效用的计算必须 c' = c + 1
+
+  ;; 禁止消费量为0
+  if (_c < 0) 
+  [ 
+    user-message "c < 0"
+   
+  ]
+
+  ifelse (_theta = 1) [
+    report ln (_c + 1)
+  ][
+    report ((_c + 1)  ^ (1 - _theta) - 1 ) / (1 - _theta)
+  ]
+
+end
+
+;; 瞬时效用函数
+to-report crraFun [_c _theta]
+  ;; CRRA函数在c<1时会产生负效用
+  ;; 仿真必须避免这个问题，因此效用的计算必须 c' = c + 1
+
+  ;; 禁止消费量为0
+  if (_c < 0) 
+  [ 
+    user-message "c < 0"
+   
+  ]
+  
+   if (_c < 1) 
+  [ 
+    set _c  1
+   
+  ]
+
+  ifelse (_theta = 1) [
+    report ln (_c )
+  ][
+    report ((_c )  ^ (1 - _theta) - 1 ) / (1 - _theta)
+  ]
+
+end
+
+;; 终生效用折现到年轻时（教科书效用）
+to-report youngUntilityFun[_c1 _c2 _rho _theta]
+  report (crraFun _c1 _theta) + (1 / (1 + _rho)) * (crraFun _c2 _theta)
+end
+
+;; 终生效用折现到年老时
+to-report oldUntilityFun[_c1 _c2 _rho _theta]
+  report (crraFun _c1 _theta)*  (1 + _rho) + (crraFun _c2 _theta)
+end
+
+
+
+;; 终生效用折现到年轻时（教科书效用）:有养老
+to-report youngUntilityFun_sup[_c1 _c2 _rho _theta _sup_rate]
+  report (crraFun _c1 _theta) + (1 / (1 + _rho)) * (crraFun (_c2 * _sup_rate) _theta)
+end
+
+;; 终生效用折现到年老时：有养老
+to-report oldUntilityFun_sup[_c1 _c2 _rho _theta _sup_rate]
+  report (crraFun _c1 _theta)*  (1 + _rho) + (crraFun (_c2 * _sup_rate) _theta)
+end
+
+
+
+

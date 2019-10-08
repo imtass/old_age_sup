@@ -1,0 +1,22 @@
+;; if number < 0, return 0
+to-report randomInt [number]
+  
+  if(number < 0) [report 0]
+  
+  let int_part int number 
+  if (int_part = number) [report number]
+  
+  let frac_part  number - int_part
+  
+  if (random-float 1 < frac_part )[
+    set int_part int_part + 1
+  ]
+  report int_part
+end
+
+to test_randomInt
+  let total 0
+  repeat 100000 [set total  total + randomInt (5 / 3)]
+  print (word (total / 100000) " vs " (5 / 3))
+  
+end
